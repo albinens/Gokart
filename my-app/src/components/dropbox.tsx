@@ -14,7 +14,7 @@ import { ListItemText } from "@mui/material";
 import { Divider } from "@mui/material";
 import { Grid } from "@mui/material";
 import { relative } from "path";
-import { Label } from "recharts";
+
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
 const MenuProps = {

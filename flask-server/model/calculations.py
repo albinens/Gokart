@@ -21,7 +21,6 @@ class Calculations:
 
     @classmethod
     def average(position, data, min, max):
-
         sum = 0
         i = 0
         average = 0
@@ -31,8 +30,8 @@ class Calculations:
                     if laptime >= min and laptime <= max:
                         sum += laptime
                         i += 1
+
         average = round((sum/i), 1)
-        print(average)
         return average
 
     @classmethod

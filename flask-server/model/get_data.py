@@ -8,13 +8,25 @@ import json
 class get_data():
 
     @classmethod
-    def read_table(self, nr):
+    def read_table(self, nr, time):
         try:
-
+            print(time, "---------------")
             data = []
             db = DataBaseConnection.connect()
             cursor = db.cursor()
-            cursor.execute("SELECT * FROM bilinfo WHERE bilnr ="+str(nr))
+
+            if time == None:
+                sentence = ""
+            else:
+                # First check so that time is a string and NOT an int
+                if type(time) == int:
+                    time = str(time)
+                sentence = " AND TIME > "+time
+                print(sentence)
+            cursorRequest = "SELECT * FROM bilinfo WHERE bilnr = " + \
+                str(nr)+sentence
+            print(cursorRequest)
+            cursor.execute(cursorRequest)
 
             # Retrieve the results of the query
             rows = cursor.fetchall()

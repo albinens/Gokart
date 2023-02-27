@@ -16,7 +16,7 @@ class Model():
         min, max = (40, 70)
 
         # DENNA RETURNERAR DATA ENDAST. FUNKAR? JA
-        data = self.__getdata.read_table(13)
+        data = self.__getdata.read_table(13, "0")
         self.__Calculations.average(data, min, max)
         self.__Calculations.laps(data, min, max)
         self.__Calculations.high(data, max)

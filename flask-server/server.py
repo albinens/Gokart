@@ -39,18 +39,27 @@ class Main():
     def lapsOfCar(id):
         # ID kan vara csv. Filtering sker här:
         wantedId = []
+        values = []
         if "," in id:
-            for char in id:
-                if char == ",":
-                    pass
-                else:
-                    wantedId.append(char)
+
+            values = id.split(",")
+            if len(values[-1]) > 3:
+                time = values[-1]
+
+                print('HÄR ÄR TID - ', time)
+                wantedId = values[:-1]
+            else:
+                wantedId = values
+                time = 1
 
         else:
             wantedId.append(id)
+            time = 1
+
         averageList = []
         for id in wantedId:
-            laps = get_data.read_table(id)
+            print("TIME __----------------", time)
+            laps = get_data.read_table(id, time)
             averageList.append(Calculations.average(laps, 10, 100))
             # return jsonify(laps),
         return jsonify(averageList)
