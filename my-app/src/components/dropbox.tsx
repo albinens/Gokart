@@ -58,7 +58,11 @@ export default function MultipleSelectChip() {
 
   const submitRequest = () => {
     setData([]);
-    const csv = carNumbers.join(",");
+    var csv = carNumbers.join(",");
+    if (time > 100) {
+      csv = csv + "," + time.toString();
+    }
+
     const result = fetch("http://127.0.0.1:5000/api/laps/" + csv, {
       method: "GET",
       mode: "cors",
@@ -82,7 +86,7 @@ export default function MultipleSelectChip() {
     );
   };
 
-  const [time, setTime] = React.useState<number>(Math.round(Date.now() / 1000));
+  const [time, setTime] = React.useState<number>(0);
 
   const timeConverter = (event: SelectChangeEvent<typeof time>) => {
     const currentTime = Math.round(Date.now() / 1000);
@@ -139,7 +143,7 @@ export default function MultipleSelectChip() {
           labelId="demo-simple-select-label"
           id="demo-simple-select"
           label="Time"
-          value={time !== undefined ? Math.round(Date.now() / 1000 - time) : ""}
+          value={time !== undefined ? 0 : ""}
           onChange={timeConverter}
         >
           <MenuItem value={86400}>Idag</MenuItem>
@@ -147,7 +151,7 @@ export default function MultipleSelectChip() {
           <MenuItem value={86400 * 7 * 2}>Senaste två veckorna</MenuItem>
           <MenuItem value={86400 * 7 * 4}>Senaste månaden</MenuItem>
           <MenuItem value={86400 * 7 * 4 * 6}>Senaste halvåret</MenuItem>
-          <MenuItem value={Date.now() / 1000}>Allt</MenuItem>
+          <MenuItem value={Date.now() / 1000 - 1000}>Allt</MenuItem>
         </Select>
       </FormControl>
       <Button

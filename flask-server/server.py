@@ -43,7 +43,7 @@ class Main():
         if "," in id:
 
             values = id.split(",")
-            if len(values[-1]) > 3:
+            if len(values[-1]) > 2:
                 time = values[-1]
 
                 print('HÄR ÄR TID - ', time)
