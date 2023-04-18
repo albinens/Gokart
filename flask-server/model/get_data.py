@@ -8,11 +8,11 @@ import json
 class get_data():
 
     @classmethod
-    def read_table(self, nr, time):
+    def read_table(self,db, nr, time):
         try:
-            print(time, "---------------")
+            #print(time, "---------------")
             data = []
-            db = DataBaseConnection.connect()
+            #db = DataBaseConnection.connect()
             cursor = db.cursor()
 
             if time == None:
@@ -35,11 +35,15 @@ class get_data():
             for row in rows:
 
                 data.append(row)
+            print(data)
             print("Successful SELECT from table")
             # print(data)
         except (Exception, psycopg2.DatabaseError) as error:
             print(error)
+            
         finally:
-            cursor.close()
+            #print("Database Connection CLOSED")
+            #cursor.close()
+            #db.close()
 
             return data

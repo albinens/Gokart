@@ -17,4 +17,5 @@ def config(filename='flask-server/config/database.ini', section='postgresql'):
         raise Exception(
             'Section {0} not found in the {1} file'.format(section, filename))
 
+    #db['max_connections'] = 2
     return db
