@@ -127,7 +127,7 @@ class Main():
 
             # return jsonify(laps),
 
-        print("-------------AVERAGELIST", averageList)
+        
         # OCH DISCONNECT HÄR. PRÖVA
 
         return jsonify(averageList)

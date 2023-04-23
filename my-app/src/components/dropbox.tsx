@@ -27,6 +27,7 @@ import {
   Legend,
   ResponsiveContainer,
 } from "recharts";
+import { Time } from "highcharts";
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -71,7 +72,14 @@ var timeIndex = 5;
 const tidsVal = [dag, vecka, tvåVeckor, månad, halvår, allt];
 var dictionary = { Nr: 1, Time: 1 };
 
-var GraphData = [[{}], [{}], [{}], [{}], [{}], [{}]];
+var GraphData = [
+  [{ Nr: 1, Time: 1 }],
+  [{ Nr: 1, Time: 1 }],
+  [{ Nr: 1, Time: 1 }],
+  [{ Nr: 1, Time: 1 }],
+  [{ Nr: 1, Time: 1 }],
+  [{ Nr: 1, Time: 1 }],
+];
 
 function getStyles(name: string, personName: readonly string[], theme: Theme) {
   return {
@@ -83,6 +91,16 @@ function getStyles(name: string, personName: readonly string[], theme: Theme) {
 }
 
 export default function MultipleSelectChip() {
+  useEffect(() => {
+    if (GraphData[5].length === 1) {
+      graphdata();
+      console.log("GraphData Hämtad");
+    } else {
+      console.log("GraphData inte hämtad");
+      console.log(carNumbers, "CarNUMBERS----------------------------");
+    }
+  });
+
   const [data, setData] = useState<any[] | undefined>(undefined);
 
   const submitRequest = async (input: string, getAllTime: number) => {
@@ -200,6 +218,10 @@ export default function MultipleSelectChip() {
     console.log(currentTime);
     timeIndex = tidsVal.indexOf(Number(value));
 
+    if (isSorted === true) {
+      setSorted(false);
+    }
+
     setTime(currentTime - Number(value));
   };
 
@@ -207,6 +229,25 @@ export default function MultipleSelectChip() {
     GraphData = [[], [], [], [], [], []];
     for (const element of tidsVal) {
       submitRequest("GETALL", element);
+    }
+  };
+
+  const [isSorted, setSorted] = React.useState<boolean>(false);
+  const sortData = async () => {
+    //Data
+
+    //GraphData
+    if (isSorted === false) {
+      console.log(GraphData[timeIndex], "Innan Sort");
+      GraphData[timeIndex] = GraphData[timeIndex].sort(
+        (a, b) => a.Time - b.Time
+      );
+      console.log(GraphData[timeIndex], "Efter Sort");
+      setSorted(true);
+    }
+    if (isSorted === true) {
+      GraphData[timeIndex] = GraphData[timeIndex].sort((a, b) => a.Nr - b.Nr);
+      setSorted(false);
     }
   };
 
@@ -312,6 +353,15 @@ export default function MultipleSelectChip() {
       >
         GraphData
       </Button>
+
+      <Button
+        variant="contained"
+        onClick={() => sortData()}
+        sx={{ m: 1, width: 100, height: 56 }}
+      >
+        Sortera
+      </Button>
+
       <ResponsiveContainer width="100%" height={"auto"}>
         <Grid
           container
@@ -328,6 +378,79 @@ export default function MultipleSelectChip() {
           display="flex"
           flexWrap="wrap"
         >
+          <Grid
+            item
+            xs={6}
+            display="flex"
+            flexWrap="wrap"
+            minWidth={250}
+            minHeight={250}
+            maxHeight={400}
+            maxWidth={500}
+            justifyContent={"center"}
+          >
+            <ResponsiveContainer
+              width="100%"
+              height="100%"
+              minWidth={350}
+              minHeight={350}
+            >
+              <BarChart
+                width={350}
+                height={350}
+                data={GraphData[timeIndex]}
+                margin={{
+                  top: 10,
+                  right: 20,
+                  left: -20,
+                  bottom: 10,
+                }}
+              >
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis
+                  dataKey="Nr"
+                  label={{
+                    value: "Bilnummer",
+                    position: "insideBottom",
+                    offset: -5,
+                  }}
+                />
+                <YAxis
+                  type="number"
+                  domain={[52, 70]}
+                  label={{
+                    value: "Genomsnitt",
+                    angle: -90,
+                    position: "insideLeft",
+                    dx: 40,
+                    dy: -60,
+                  }}
+                />
+                <Tooltip />
+                <Bar
+                  type="monotone"
+                  dataKey="Time"
+                  radius={8}
+
+                  //stroke="#8884d8"
+                  //fill={time >>> 10000 ? "#ff2600" : "#8884d8"}
+                >
+                  {GraphData[timeIndex].map((index) => (
+                    <Cell
+                      key={index.Nr}
+                      fill={
+                        carNumbers.includes(index.Nr.toString())
+                          ? "#47adcc"
+                          : "#477fcc"
+                      }
+                      //stroke="#000000"
+                    />
+                  ))}
+                </Bar>
+              </BarChart>
+            </ResponsiveContainer>
+          </Grid>
+
           <Grid
             item
             xs={6}
@@ -354,48 +477,6 @@ export default function MultipleSelectChip() {
                   </ListItem>
                 ))}
             </List>
-          </Grid>
-
-          <Grid
-            item
-            xs={6}
-            display="flex"
-            flexWrap="wrap"
-            minWidth={250}
-            minHeight={250}
-            maxHeight={400}
-            maxWidth={500}
-            justifyContent={"center"}
-          >
-            <ResponsiveContainer
-              width="100%"
-              height="100%"
-              minWidth={350}
-              minHeight={350}
-            >
-              <BarChart
-                width={350}
-                height={350}
-                data={GraphData[timeIndex]}
-                margin={{
-                  top: 10,
-                  right: 20,
-                  left: -30,
-                  bottom: 10,
-                }}
-              >
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="Nr" />
-                <YAxis type="number" domain={[52, 70]} />
-                <Tooltip />
-                <Bar
-                  type="monotone"
-                  dataKey="Time"
-                  stroke="#8884d8"
-                  fill="#8884d8"
-                />
-              </BarChart>
-            </ResponsiveContainer>
           </Grid>
         </Grid>
       </ResponsiveContainer>
